@@ -155,14 +155,8 @@ app.on('ready', () => {
   	soundcloud.likeUnlike()
   	let title = "Track Like Toggled"
   	mainWindow.webContents.send('notification', {
-      title/*,
-      body: title,
-      icon: title*/
+      title
     })
-    /*let myNotification = new window.Notification('Track like Toggled', {
-  		body: 'Like added or removed'
-	})
-	//myNotification.show()*/
   })
 
   menu.events.on('playPause', () => {
