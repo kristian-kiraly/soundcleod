@@ -6,7 +6,7 @@ if (require('electron-squirrel-startup')) {
   return
 }
 
-const { app, BrowserWindow, globalShortcut, Menu } = require('electron')
+const { app, BrowserWindow, globalShortcut, Menu, clipboard, dialog } = require('electron')
 const autoUpdater = require('./auto-updater')
 const checkAccessibilityPermissions = require('./check-accessibility-permissions')
 const contextMenu = require('./context-menu')
@@ -138,6 +138,48 @@ app.on('ready', () => {
     }
     mainWindow = null
   })
+
+  mainWindow.webContents.on('did-finish-load', () => {
+  	tryLoadingClipboardURL()
+  })
+
+  app.on("browser-window-focus", () => {
+  	if (!mainWindow.webContents.isLoading()) {
+  		tryLoadingClipboardURL()
+  	}
+  })
+
+  var lastURLUsed = ""
+
+  function tryLoadingClipboardURL() {
+	var url = ""
+
+	let bookmark = clipboard.readBookmark()
+	let bookmarkHasTitle = bookmark.title != ''
+	let bookmarkHasURL = bookmark.url != ''
+
+	if (bookmarkHasTitle && bookmarkHasURL) {
+		url = bookmark.url
+	} else {
+		let bookmarkText = clipboard.readText()
+		if (bookmarkText != '') {
+			url = bookmarkText
+		}
+	}
+	if (url.toLowerCase().includes("soundcloud.com") && url != lastURLUsed) {
+		lastURLUsed = url
+		let options = {
+			type: "question",
+			buttons: ['Yes', 'No'],
+			message: 'Do you want to play the SoundCloud link on your clipboard?'
+		}
+
+		let response = dialog.showMessageBoxSync(mainWindow, options)
+		if (response == 0) {
+			mainWindow.loadURL(url)
+		}
+	}
+  }
 
   globalShortcut.register('MediaPlayPause', () => {
     soundcloud.playPause()
