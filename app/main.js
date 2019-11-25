@@ -171,7 +171,7 @@ app.on('ready', () => {
 		let options = {
 			type: "question",
 			buttons: ['Yes', 'No'],
-			message: 'Do you want to play the SoundCloud link on your clipboard?'
+			message: 'Do you want to open the SoundCloud link on your clipboard?'
 		}
 
 		let response = dialog.showMessageBoxSync(mainWindow, options)
