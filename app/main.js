@@ -183,10 +183,10 @@ app.on('ready', () => {
 		}
 	}
   }
-
-  globalShortcut.register('MediaPlayPause', () => {
-    soundcloud.playPause()
-  })
+  if (useMediaKeys) {
+    globalShortcut.register('MediaPlayPause', () => {
+      soundcloud.playPause()
+    })
 
     globalShortcut.register('MediaNextTrack', () => {
       soundcloud.nextTrack()
